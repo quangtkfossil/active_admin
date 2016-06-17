@@ -18,12 +18,12 @@ describe ActiveAdmin::Filters::ResourceExtension do
   end
 
   it "should return the defaults if no filters are set" do
-    ary = if defined?(::ActiveRecord)
-      [ :author, :body, :category, :created_at, :custom_searcher, :position, :published_at,
-        :starred, :taggings, :title, :updated_at ]
-    elsif defined?(::Mongoid)
-      [ :author, :body, :category, :created_at, :custom_searcher, :foo_id, :position,
-        :published_at, :starred, :title, :updated_at ]
+    ary = if defined?(ActiveRecord)
+      [
+        :author, :body, :category, :created_at, :custom_searcher, :position, :published_at, :starred, :taggings, :title, :updated_at
+      ]
+    else
+      [ :author, :body, :category, :created_at, :custom_searcher, :foo_id, :position, :published_at, :starred, :title, :updated_at ]
     end
     expect(resource.filters.keys).to match_array(ary)
   end
@@ -107,12 +107,12 @@ describe ActiveAdmin::Filters::ResourceExtension do
       resource.preserve_default_filters!
       resource.add_filter :count, as: :string
 
-      ary = if defined?(::ActiveRecord)
-        [ :author, :body, :category, :count, :created_at, :custom_searcher, :position,
-            :published_at, :starred, :taggings, :title, :updated_at ]
-      elsif defined?(::Mongoid)
-        [ :author, :body, :category, :count, :created_at, :custom_searcher, :foo_id,
-          :position, :published_at, :starred, :title, :updated_at ]
+      ary = if defined?(ActiveRecord)
+        [
+          :author, :body, :category, :count, :created_at, :custom_searcher, :position, :published_at, :starred, :taggings, :title, :updated_at
+        ]
+      else
+        [ :author, :body, :category, :count, :created_at, :custom_searcher, :foo_id, :position, :published_at, :starred, :title, :updated_at ]
       end
 
       expect(resource.filters.keys).to match_array(ary)

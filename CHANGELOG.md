@@ -13,7 +13,6 @@
 * Migration from Metasearch to Ransack [#1979][] by [@seanlinsley][]
 * Rails 4 support [#2326][] by many people <3
 * Rails 4.2 support [#3731][] by [@gonzedge][] and [@timoschilling][]
-* Mongoid support by [@Zhomart][]
 
 #### Minor
 
@@ -1104,5 +1103,4 @@ of the highlights. 250 commits. Enough said.
 [@whatcould]: https://github.com/whatcould
 [@yawn]: https://github.com/yawn
 [@yorch]: https://github.com/yorch
-[@Zhomart]: https://github.com/Zhomart
 [@zorab47]: https://github.com/zorab47

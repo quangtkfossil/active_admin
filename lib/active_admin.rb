@@ -115,10 +115,6 @@ module ActiveAdmin
       ActiveAdmin::Event.subscribe ActiveAdmin::Application::AfterLoadEvent, &block
     end
 
-    def object_mapper_for(thing)
-      ActiveAdmin::ObjectMapper::ActiveRecord
-    end
-
   end
 
 end
@@ -131,8 +127,6 @@ require 'active_admin/error'
 require 'active_admin/batch_actions'
 require 'active_admin/filters'
 
-require 'active_admin/object_mapper/abstract_adapter'
-
 # Require ORM-specific plugins
-require 'active_admin/object_mapper/active_record' if defined? ::ActiveRecord
-require 'active_admin/object_mapper/mongoid'       if defined? ::Mongoid
+require 'active_admin/orm/active_record' if defined? ActiveRecord
+require 'active_admin/orm/mongoid'       if defined? Mongoid

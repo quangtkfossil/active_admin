@@ -24,21 +24,13 @@ describe ActiveAdmin::Helpers::Collection do
       expect(collection_size(Post.where(title: "A post"))).to eq 2
     end
 
-    it "should return the collection size for a collection with group by" do
-      if defined?(::ActiveRecord)
+    if defined?(ActiveRecord)
+      it "should return the collection size for a collection with group by" do
         expect(collection_size(Post.group(:title))).to eq 2
       end
-      if defined?(::Mongoid)
-        skip "not implemented yet."
-      end
-    end
 
-    it "should return the collection size for a collection with group by, select and custom order" do
-      if defined?(::ActiveRecord)
+      it "should return the collection size for a collection with group by, select and custom order" do
         expect(collection_size(Post.select("title, count(*) as nb_posts").group(:title).order("nb_posts"))).to eq 2
-      end
-      if defined?(::Mongoid)
-        skip "not implemented yet."
       end
     end
 

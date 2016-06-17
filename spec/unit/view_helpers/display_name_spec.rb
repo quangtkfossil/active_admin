@@ -44,8 +44,6 @@ describe "display_name" do
 
   context "when no display name method is defined" do
     context "on a Rails model" do
-      let(:i18n_namespace) { defined?(::ActiveRecord) ? :activerecord : :mongoid }
-
       it "should show the model name" do
         class ThisModel
           extend ActiveModel::Naming
@@ -60,9 +58,14 @@ describe "display_name" do
       end
 
       it "should translate the model name" do
+        i18n_namespace = if defined?(ActiveRecord)
+          :activerecord
+        elsif defined?(Mongoid)
+          :mongoid
+        end
         with_translation i18n_namespace => {models: {tagging: {one: "Different"}}} do
           subject = Tagging.create!
-          expect(display_name subject).to eq "Different #1"
+          expect(display_name subject).to eq "Different ##{subject.id}"
         end
       end
     end

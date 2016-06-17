@@ -62,8 +62,10 @@ describe ActiveAdmin::Application do
     expect(application.view_factory).to be_an_instance_of(ActiveAdmin::ViewFactory)
   end
 
-  it "should allow comments by default" do
-    expect(application.comments).to eq true
+  if defined?(ActiveRecord)
+    it "should allow comments by default" do
+      expect(application.comments).to eq true
+    end
   end
 
   describe "authentication settings" do
@@ -121,10 +123,10 @@ describe ActiveAdmin::Application do
     end
 
     it "should not pollute the global app" do
-      expect(application.namespaces.keys).to be_empty
+      expect(application.namespaces).to be_empty
       application.namespace(:brand_new_ns)
-      expect(application.namespaces.keys).to eq [:brand_new_ns]
-      expect(ActiveAdmin.application.namespaces.keys).to eq [:admin]
+      expect(application.namespaces.names).to eq [:brand_new_ns]
+      expect(ActiveAdmin.application.namespaces.names).to eq [:admin]
     end
   end
 

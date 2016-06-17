@@ -15,9 +15,22 @@ module ActiveAdmin
         end
       end
 
-      delegate :reflection_for, to: :formtastic_addons_adapter
+      def reflection_for(method)
+        return nil unless klass.respond_to? :reflect_on_association
+        if defined?(Mongoid)
+          klass.reflect_on_association(method.to_s.chomp('_id'))
+        else
+          klass.reflect_on_association(method)
+        end
+      end
 
-      delegate :column_for, to: :formtastic_addons_adapter
+      def column_for(method)
+        if defined?(Mongoid) && klass.respond_to?(:fields)
+          method.to_s == 'id' ? klass.fields['_id'] : klass.fields[method.to_s]
+        elsif klass.respond_to? :columns_hash
+          klass.columns_hash[method.to_s]
+        end
+      end
 
       def column
         column_for method
@@ -32,7 +45,14 @@ module ActiveAdmin
         @object.object.klass
       end
 
-      delegate :polymorphic_foreign_type?, to: :formtastic_addons_adapter
+      def polymorphic_foreign_type?(method)
+        if defined?(ActiveRecord)
+          klass.reflect_on_all_associations.select{ |r| r.macro == :belongs_to && r.options[:polymorphic] }
+            .map(&:foreign_type).include? method.to_s
+        else
+          false
+        end
+      end
 
       #
       # These help figure out whether the given method or association will be recognized by Ransack.
@@ -65,13 +85,6 @@ module ActiveAdmin
       def scope?
         context = Ransack::Context.for klass
         context.respond_to?(:ransackable_scope?) && context.ransackable_scope?(method.to_s, klass)
-      end
-
-      protected
-
-      def formtastic_addons_adapter
-        @formtastic_addons_adapter ||=
-          ActiveAdmin.object_mapper_for(klass).adapter(:formtastic_addons, self)
       end
 
     end

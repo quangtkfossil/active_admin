@@ -1,13 +1,11 @@
 desc "Creates a test rails app for the specs to run against"
 task :setup, :parallel do |t, args|
   require 'rails/version'
-  if File.exists? ENV['RAILS_ROOT']
-    puts "test app #{ENV['RAILS_ROOT']} already exists; skipping"
+  if File.exists? dir = "spec/rails/rails-#{Rails::VERSION::STRING}"
+    puts "test app #{dir} already exists; skipping"
   else
     system("mkdir spec/rails") unless File.exists?("spec/rails")
-    template_file = defined?(::ActiveRecord) ? 'rails_template.rb' : 'rails_template_mongoid.rb'
-    opts = defined?(::ActiveRecord) ? nil : '--skip-active-record'
-    system "#{'INSTALL_PARALLEL=yes' if args[:parallel]} bundle exec rails new #{ENV['RAILS_ROOT']} -m spec/support/#{template_file} --skip-bundle #{opts}"
+    system "#{'INSTALL_PARALLEL=yes' if args[:parallel]} bundle exec rails new #{dir} -m spec/support/rails_template.rb --skip-bundle"
     Rake::Task['parallel:after_setup_hook'].invoke if args[:parallel]
   end
 end

@@ -1,7 +1,7 @@
-require 'active_admin/object_mapper/active_record/comments/views'
-require 'active_admin/object_mapper/active_record/comments/show_page_helper'
-require 'active_admin/object_mapper/active_record/comments/namespace_helper'
-require 'active_admin/object_mapper/active_record/comments/resource_helper'
+require 'active_admin/orm/active_record/comments/views'
+require 'active_admin/orm/active_record/comments/show_page_helper'
+require 'active_admin/orm/active_record/comments/namespace_helper'
+require 'active_admin/orm/active_record/comments/resource_helper'
 
 # Add the comments configuration
 ActiveAdmin::Application.inheritable_setting :comments,                   true
@@ -14,11 +14,11 @@ ActiveAdmin::Resource.send  :include, ActiveAdmin::Comments::ResourceHelper
 ActiveAdmin.application.view_factory.show_page.send :include, ActiveAdmin::Comments::ShowPageHelper
 
 # Load the model as soon as it's referenced. By that point, Rails & Kaminari will be ready
-ActiveAdmin.autoload :Comment, 'active_admin/object_mapper/active_record/comments/comment'
+ActiveAdmin.autoload :Comment, 'active_admin/orm/active_record/comments/comment'
 
 # Walk through all the loaded namespaces after they're loaded
 ActiveAdmin.after_load do |app|
-  app.namespaces.values.each do |namespace|
+  app.namespaces.each do |namespace|
     namespace.register ActiveAdmin::Comment, as: namespace.comments_registration_name do
       actions :index, :show, :create
 
@@ -30,7 +30,7 @@ ActiveAdmin.after_load do |app|
       scope :all, show_count: false
       # Register a scope for every namespace that exists.
       # The current namespace will be the default scope.
-      app.namespaces.values.map(&:name).each do |name|
+      app.namespaces.map(&:name).each do |name|
         scope name, default: namespace.name == name do |scope|
           scope.where namespace: name.to_s
         end

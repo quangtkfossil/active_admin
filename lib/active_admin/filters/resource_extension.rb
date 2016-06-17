@@ -103,7 +103,31 @@ module ActiveAdmin
         end
       end
 
-      delegate :default_association_filters, to: :resource_extension_adapter
+      def default_mongoid_association_filters
+        if resource_class.respond_to?(:relations)
+          belongs_to = resource_class.relations.select { |name, r| r[:relation] == ::Mongoid::Relations::Referenced::In }
+          belongs_to.map { |name, r| r[:name] }
+        else
+          []
+        end
+      end
+
+      # Returns a default set of filters for the associations
+      def default_association_filters
+        return default_mongoid_association_filters if defined?(Mongoid)
+
+        if resource_class.respond_to?(:reflect_on_all_associations)
+          poly, not_poly = resource_class.reflect_on_all_associations.partition{ |r| r.macro == :belongs_to && r.options[:polymorphic] }
+
+          # remove deeply nested associations
+          not_poly.reject!{ |r| r.chain.length > 2 }
+
+          filters = poly.map(&:foreign_type) + not_poly.map(&:name)
+          filters.map &:to_sym
+        else
+          []
+        end
+      end
 
       # Returns a default set of filters for the content columns
       def default_content_filters
@@ -122,11 +146,6 @@ module ActiveAdmin
         ActiveAdmin::SidebarSection.new :filters, only: :index, if: ->{ active_admin_config.filters.any? } do
           active_admin_filters_form_for assigns[:search], active_admin_config.filters
         end
-      end
-
-      def resource_extension_adapter
-        @resource_extension_adapter ||=
-          ActiveAdmin.object_mapper_for(resource_class).adapter(:resource_extension, self)
       end
 
     end

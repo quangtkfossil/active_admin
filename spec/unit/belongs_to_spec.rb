@@ -42,11 +42,11 @@ describe ActiveAdmin::Resource::BelongsTo do
       allow(controller).to receive(:request){ request }
     end
     it 'should be able to access the collection' do
-      if defined?(::ActiveRecord)
-        expect(controller.send :collection).to be_a ::ActiveRecord::Relation
+      if defined?(ActiveRecord)
+        expect(controller.send :collection).to be_a ActiveRecord::Relation
       end
-      if defined?(::Mongoid)
-        expect(controller.send :collection).to be_a ::Mongoid::Criteria
+      if defined?(Mongoid)
+        expect(controller.send :collection).to be_a Mongoid::Criteria
       end
     end
     it 'should be able to build a new resource' do

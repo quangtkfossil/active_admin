@@ -1,13 +1,18 @@
+require 'pathname'
+
+current_dir = Pathname.new(File.expand_path('..', __FILE__))
+spec_dir = current_dir.parent.parent
+
 # Rails template to build the sample app for specs
 
 run "rm Gemfile"
 run "rm -r test"
 
 # Create a cucumber database and environment
-copy_file File.expand_path('../templates/cucumber.rb', __FILE__),                "config/environments/cucumber.rb"
-copy_file File.expand_path('../templates/cucumber_with_reloading.rb', __FILE__), "config/environments/cucumber_with_reloading.rb"
+copy_file spec_dir.join('support/templates/cucumber.rb'),                "config/environments/cucumber.rb"
+copy_file spec_dir.join('support/templates/cucumber_with_reloading.rb'), "config/environments/cucumber_with_reloading.rb"
 
-copy_file File.expand_path('../templates/mongoid.yml', __FILE__),                "config/mongoid.yml"
+copy_file current_dir.join('templates/mongoid.yml'), "config/mongoid.yml"
 
 if File.exists? 'config/secrets.yml'
   gsub_file 'config/secrets.yml', /\z/, "\ncucumber:\n  secret_key_base: #{'o' * 128}"
@@ -25,7 +30,7 @@ inject_into_file 'app/models/post.rb', %q{
   attr_accessible :author, :position unless Rails::VERSION::MAJOR > 3 && !defined? ProtectedAttributes
   field :published_at, type: DateTime
 }, after: 'include Mongoid::Document'
-copy_file File.expand_path('../templates/post_decorator.rb', __FILE__), "app/models/post_decorator.rb"
+copy_file spec_dir.join('support/templates/post_decorator.rb'), "app/models/post_decorator.rb"
 
 generate :model, "blog/post title:string body:text position:integer starred:boolean foo_id:integer"
 inject_into_file 'app/models/blog/post.rb', %q{
@@ -85,13 +90,13 @@ inject_into_file "config/environment.rb", "\n$LOAD_PATH.unshift('#{File.expand_p
 inject_into_file 'config/application.rb', "\n\n    config.action_controller.action_on_unpermitted_parameters = :raise if Rails::VERSION::MAJOR == 4\n\n", after: 'class Application < Rails::Application'
 
 # Add some translations
-append_file "config/locales/en.yml", File.read(File.expand_path('../templates/en.yml', __FILE__))
+append_file "config/locales/en.yml", File.read(spec_dir.join('support/templates/en.yml'))
 
 # Add predefined admin resources
-directory File.expand_path('../templates/admin', __FILE__), "app/admin"
+directory spec_dir.join('support/templates/admin'), "app/admin"
 
 # Add predefined policies
-directory File.expand_path('../templates/policies', __FILE__), 'app/policies'
+directory spec_dir.join('support/templates/policies'), 'app/policies'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 

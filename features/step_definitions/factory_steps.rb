@@ -10,9 +10,9 @@ Given /^(a|\d+)( published)? posts?(?: with the title "([^"]*)")?(?: and body "(
   category  = Category.where(name: category_name).first_or_create if category_name
   title   ||= "Hello World %i"
   count.times do |i|
-    if defined?(::ActiveRecord)
+    if defined?(ActiveRecord)
       Post.create! title: title % i, body: body, author: author, published_at: published, custom_category_id: category.try(:id)
-    elsif defined?(::Mongoid)
+    elsif defined?(Mongoid)
       Post.create! title: title % i, body: body, author: author, published_at: published, category_id: category.try(:id)
     end
   end
