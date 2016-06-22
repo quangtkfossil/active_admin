@@ -125,14 +125,8 @@ module ActiveAdmin
           end
         else
           offset = (collection.current_page - 1) * collection.limit_value
-          if @display_total
-            total  = collection.total_count
-            I18n.t 'active_admin.pagination.multiple', model: entries_name, total: total,
-              from: offset + 1, to: offset + collection_size
-          else
-            I18n.t 'active_admin.pagination.multiple_without_total', model: entries_name,
-              from: offset + 1, to: offset + collection_size
-          end
+          total  = collection.total_count
+          I18n.t('active_admin.pagination.multiple', :model => entries_name, :from => offset + 1, :to => offset + collection_size, :total => total)
         end
       end
 
