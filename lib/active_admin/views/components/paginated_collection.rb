@@ -125,6 +125,7 @@ module ActiveAdmin
           end
         else
           offset = (collection.current_page - 1) * collection.limit_value
+          puts collection.limit_value
           if @display_total
             total  = collection.total_count
             I18n.t 'active_admin.pagination.multiple', model: entries_name, total: total,
