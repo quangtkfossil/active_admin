@@ -118,7 +118,6 @@ module ActiveAdmin
         end
 
         if collection.total_pages < 2
-          puts "Here"
           case collection_size
           when 0; I18n.t('active_admin.pagination.empty',    model: entries_name)
           when 1; I18n.t('active_admin.pagination.one',      model: entry_name)
@@ -126,7 +125,7 @@ module ActiveAdmin
           end
         else
           offset = (collection.current_page - 1) * collection.limit_value
-          puts collection_size
+          puts collection.limit_value
           total  = collection.total_count
           I18n.t('active_admin.pagination.multiple', :model => entries_name, :from => offset + 1, :to => offset + collection_size, :total => total)
         end
