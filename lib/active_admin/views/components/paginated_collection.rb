@@ -128,7 +128,7 @@ module ActiveAdmin
           limit = ((collection.current_page + 1) * collection.limit_value) - collection.limit_value
           total  = collection.total_count
           if collection.current_page == collection.total_pages
-            limit = total - offset
+            limit = total
           end
           I18n.t('active_admin.pagination.multiple', :model => entries_name, :from => offset + 1, :to => limit, :total => total)
         end
