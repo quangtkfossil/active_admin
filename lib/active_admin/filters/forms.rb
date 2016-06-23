@@ -92,7 +92,7 @@ module ActiveAdmin
           filters.each do |attribute, opts|
             next if opts.key?(:if)     && !call_method_or_proc_on(self, opts[:if])
             next if opts.key?(:unless) &&  call_method_or_proc_on(self, opts[:unless])
-
+            print attribute
             f.filter attribute, opts.except(:if, :unless)
           end
 
