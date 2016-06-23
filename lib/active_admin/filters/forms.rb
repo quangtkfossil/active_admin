@@ -87,12 +87,12 @@ module ActiveAdmin
         required = { html: {method: :get},
                      as: :q }
         options  = defaults.deep_merge(options).deep_merge(required)
-
+        puts search
         form_for search, options do |f|
           filters.each do |attribute, opts|
             next if opts.key?(:if)     && !call_method_or_proc_on(self, opts[:if])
             next if opts.key?(:unless) &&  call_method_or_proc_on(self, opts[:unless])
-            puts attribute
+            puts attribute, opts
             f.filter attribute, opts.except(:if, :unless)
           end
 
