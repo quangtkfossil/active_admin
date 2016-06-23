@@ -3,7 +3,7 @@
 }
 
 .pagination {
-  float: right;
+  float: left;
   font-size: 0.9em;
   margin-left: 10px;
 
@@ -23,14 +23,14 @@
 }
 
 .pagination_information {
-  float: right;
+  float: left;
   margin-bottom: 5px;
   color: #b3bcc1;
   b { color: #5c6469; }
 }
 
 .download_links {
-  float: left;
+  float: right;
 }
 
 .pagination_per_page {
