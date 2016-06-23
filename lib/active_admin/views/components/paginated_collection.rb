@@ -65,9 +65,9 @@ module ActiveAdmin
       def build_pagination_with_formats(options)
         div id: "index_footer" do
           build_per_page_select if @per_page.is_a?(Array)
-          build_pagination
+          
           div(page_entries_info(options).html_safe, class: "pagination_information")
-
+          build_pagination
           download_links = @download_links.is_a?(Proc) ? instance_exec(&@download_links) : @download_links
 
           if download_links.is_a?(Array) && !download_links.empty?
