@@ -18,6 +18,7 @@ describe ActiveAdmin::ResourceController::DataAccess do
     it "should call the search method" do
       chain = double "ChainObj"
       expect(chain).to receive(:ransack).with(params[:q]).once.and_return(Post.ransack)
+      byebug
       controller.send :apply_filtering, chain
     end
   end
