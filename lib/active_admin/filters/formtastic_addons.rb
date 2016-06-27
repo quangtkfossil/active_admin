@@ -25,6 +25,7 @@ module ActiveAdmin
       end
 
       def column_for(method)
+        byebug
         if defined?(Mongoid) && klass.respond_to?(:fields)
           method.to_s == 'id' ? klass.fields['_id'] : klass.fields[method.to_s]
         elsif klass.respond_to? :columns_hash
